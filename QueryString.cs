@@ -306,8 +306,8 @@ namespace Snap.Net.QueryString
         public string ToString(QueryStringSeparator separator)
         {
             return string.Join(
-GetSeparatorString(separator),
-this.Select(pair => $"{UrlEncode(pair.Name)}{(pair.Value == null ? "" : "=" + UrlEncode(pair.Value))}"));
+                GetSeparatorString(separator),
+                this.Select(pair => $"{UrlEncode(pair.Name)}{(pair.Value == null ? "" : "=" + UrlEncode(pair.Value))}"));
         }
 
         /// <summary>
@@ -316,11 +316,11 @@ this.Select(pair => $"{UrlEncode(pair.Name)}{(pair.Value == null ? "" : "=" + Ur
         /// <returns></returns>
         public IEnumerator<QueryStringParameter> GetEnumerator()
         {
-            foreach (KeyValuePair<string, List<string?>> pair in _dictionary)
+            foreach ((string name, List<string?> values) in _dictionary)
             {
-                foreach (string? value in pair.Value)
+                foreach (string? value in values)
                 {
-                    yield return new QueryStringParameter(pair.Key, value);
+                    yield return new QueryStringParameter(name, value);
                 }
             }
         }
@@ -356,12 +356,12 @@ this.Select(pair => $"{UrlEncode(pair.Name)}{(pair.Value == null ? "" : "=" + Ur
                 return false;
             }
             // Go through each key from current object
-            foreach (KeyValuePair<string, List<string?>> param in _dictionary)
+            foreach ((string key, List<string?> values) in _dictionary)
             {
                 // Get values for this key
-                List<string?> thisValues = param.Value;
+                List<string?> thisValues = values;
                 // If the other didn't have param name
-                if (!other._dictionary.TryGetValue(param.Key, out List<string?>? otherValues))
+                if (!other._dictionary.TryGetValue(key, out List<string?>? otherValues))
                 {
                     return false;
                 }
