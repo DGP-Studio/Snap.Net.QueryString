@@ -14,9 +14,9 @@ namespace Snap.Net.QueryString
         /// </summary>
         public string? Name
         {
-            get => _name;
+            get => this._name;
 
-            set => _name = value ?? throw new ArgumentNullException("Name");
+            set => this._name = value ?? throw new ArgumentNullException("Name");
         }
 
         /// <summary>
@@ -29,10 +29,10 @@ namespace Snap.Net.QueryString
         /// </summary>
         /// <param name="name">The name of the parameter. Cannot be null.</param>
         /// <param name="value">The optional value of the parameter.</param>
-        internal QueryStringParameter(string name, string? value = null)
+        internal QueryStringParameter(string? name, string? value = null)
         {
-            Name = name ?? throw new ArgumentNullException("name");
-            Value = value;
+            this.Name = name ?? throw new ArgumentNullException(nameof(name));
+            this.Value = value;
         }
     }
 }
