@@ -13,6 +13,6 @@
         /// <summary>
         /// An alternative separator for query string parameters. Generated query string is like "a=1;b=5".
         /// </summary>
-        Semicolon
+        Semicolon,
     }
 }

@@ -37,7 +37,7 @@ namespace Snap.Net.QueryString
                 {
                     throw new ArgumentNullException(nameof(name));
                 }
-                if (this.TryGetValue(name, out string? value))
+                if (TryGetValue(name, out string? value))
                 {
                     return value;
                 }
@@ -57,7 +57,7 @@ namespace Snap.Net.QueryString
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            if (this._dictionary.TryGetValue(name, out List<string?>? values))
+            if (_dictionary.TryGetValue(name, out List<string?>? values))
             {
                 value = values.First();
                 return true;
@@ -78,7 +78,7 @@ namespace Snap.Net.QueryString
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            if (this._dictionary.TryGetValue(name, out List<string?>? storedValues))
+            if (_dictionary.TryGetValue(name, out List<string?>? storedValues))
             {
                 values = storedValues.ToArray();
                 return true;
@@ -92,7 +92,7 @@ namespace Snap.Net.QueryString
         /// </summary>
         public int Count()
         {
-            return this._dictionary.Select(i => i.Value.Count).Sum();
+            return _dictionary.Select(i => i.Value.Count).Sum();
         }
 
         /// <summary>
@@ -106,10 +106,10 @@ namespace Snap.Net.QueryString
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            if (!this._dictionary.TryGetValue(name, out List<string?>? values))
+            if (!_dictionary.TryGetValue(name, out List<string?>? values))
             {
                 values = new List<string?>();
-                this._dictionary[name] = values;
+                _dictionary[name] = values;
             }
             values.Add(value);
         }
@@ -125,7 +125,7 @@ namespace Snap.Net.QueryString
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            this._dictionary[name] = new List<string?>() { value };
+            _dictionary[name] = new List<string?>() { value };
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Snap.Net.QueryString
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            return this._dictionary.ContainsKey(name);
+            return _dictionary.ContainsKey(name);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Snap.Net.QueryString
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            return this._dictionary.TryGetValue(name, out List<string?>? values) && values.Contains(value);
+            return _dictionary.TryGetValue(name, out List<string?>? values) && values.Contains(value);
         }
 
         /// <summary>
@@ -164,11 +164,11 @@ namespace Snap.Net.QueryString
         /// <returns>True if the parameters were removed, else false.</returns>
         public bool Remove(string name)
         {
-            if (this._dictionary.TryGetValue(name, out List<string?>? values))
+            if (_dictionary.TryGetValue(name, out List<string?>? values))
             {
                 if (values.Count == 1)
                 {
-                    this._dictionary.Remove(name);
+                    _dictionary.Remove(name);
                 }
                 else
                 {
@@ -186,7 +186,7 @@ namespace Snap.Net.QueryString
         /// <returns>True if the parameters were removed, else false.</returns>
         public bool RemoveAll(string name)
         {
-            return this._dictionary.Remove(name);
+            return _dictionary.Remove(name);
         }
 
         /// <summary>
@@ -197,14 +197,14 @@ namespace Snap.Net.QueryString
         /// <returns>True if parameter was removed, else false.</returns>
         public bool Remove(string name, string value)
         {
-            if (this._dictionary.TryGetValue(name, out List<string?>? values))
+            if (_dictionary.TryGetValue(name, out List<string?>? values))
             {
                 if (values.RemoveFirstWhere(i => Equals(i, value)))
                 {
                     // If removed last value, remove the key
                     if (values.Count == 0)
                     {
-                        this._dictionary.Remove(name);
+                        _dictionary.Remove(name);
                     }
                     return true;
                 }
@@ -220,13 +220,13 @@ namespace Snap.Net.QueryString
         /// <returns>The count of parameters removed.</returns>
         public int RemoveAll(string name, string value)
         {
-            if (this._dictionary.TryGetValue(name, out List<string?>? values))
+            if (_dictionary.TryGetValue(name, out List<string?>? values))
             {
                 int countRemoved = values.RemoveAll(i => Equals(i, value));
                 // If removed last value, remove the key
                 if (values.Count == 0)
                 {
-                    this._dictionary.Remove(name);
+                    _dictionary.Remove(name);
                 }
                 return countRemoved;
             }
@@ -287,7 +287,7 @@ namespace Snap.Net.QueryString
         /// <returns></returns>
         public override string ToString()
         {
-            return this.ToString(QueryStringSeparator.Ampersand);
+            return ToString(QueryStringSeparator.Ampersand);
         }
 
         private static string GetSeparatorString(QueryStringSeparator separator)
@@ -318,7 +318,7 @@ namespace Snap.Net.QueryString
         /// <returns></returns>
         public IEnumerator<QueryStringParameter> GetEnumerator()
         {
-            foreach ((string name, List<string?> values) in this._dictionary)
+            foreach ((string name, List<string?> values) in _dictionary)
             {
                 foreach (string? value in values)
                 {
@@ -333,7 +333,7 @@ namespace Snap.Net.QueryString
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         /// <summary>
@@ -347,18 +347,18 @@ namespace Snap.Net.QueryString
             {
                 return false;
             }
-            return this.Equals(other, default, default);
+            return Equals(other, default, default);
         }
 
         public bool Equals(QueryString other, StringComparison nameComparisonType, StringComparison valueComparisonType)
         {
             // If they have a different count of keys
-            if (this._dictionary.Count != other._dictionary.Count)
+            if (_dictionary.Count != other._dictionary.Count)
             {
                 return false;
             }
             // Go through each key from current object
-            foreach ((string key, List<string?> values) in this._dictionary)
+            foreach ((string key, List<string?> values) in _dictionary)
             {
                 // Get values for this key
                 List<string?> thisValues = values;
@@ -378,7 +378,7 @@ namespace Snap.Net.QueryString
                 foreach (string? thisVal in thisValues)
                 {
                     // If we couldn't find matching to remove
-                    if (!otherValues.RemoveFirstWhere(i => this.ValueEquals(thisVal, i, valueComparisonType)))
+                    if (!otherValues.RemoveFirstWhere(i => ValueEquals(thisVal, i, valueComparisonType)))
                     {
                         return false;
                     }
